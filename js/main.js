@@ -1,3 +1,22 @@
+// ---- Enforce initial scroll position to top & prevent auto-restore on reload ----
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+function scrollToTopOnLoad() {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+}
+
+scrollToTopOnLoad();
+window.addEventListener('DOMContentLoaded', scrollToTopOnLoad);
+window.addEventListener('pageshow', scrollToTopOnLoad);
+window.addEventListener('load', () => {
+  setTimeout(scrollToTopOnLoad, 10);
+  setTimeout(scrollToTopOnLoad, 100);
+});
+
 // ---- typewriter ----
 (function(){
   const el=document.getElementById('typewriter');
@@ -108,13 +127,14 @@
     if(captionEl) captionEl.textContent = photo.caption;
     if(counterEl) counterEl.textContent = `Photo ${currentIndex + 1} of ${photos.length}`;
 
-    // Update thumbnails and scroll active thumbnail smoothly into view
+    // Update thumbnails and scroll active thumbnail inside container without page scroll
     if(thumbStrip){
       const items = thumbStrip.querySelectorAll('.thumb-item');
       items.forEach((item, idx) => {
         if(idx === currentIndex){
           item.classList.add('active');
-          item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          const scrollLeft = item.offsetLeft - (thumbStrip.clientWidth / 2) + (item.clientWidth / 2);
+          thumbStrip.scrollTo({ left: scrollLeft, behavior: 'smooth' });
         } else {
           item.classList.remove('active');
         }
