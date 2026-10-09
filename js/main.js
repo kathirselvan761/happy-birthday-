@@ -365,6 +365,8 @@
     const r=el.getBoundingClientRect();
     if(r.top < window.innerHeight+400) show(el);
   });},1200);
+})();
+
 // ---- back to top button ----
 (function(){
   const topBtn = document.getElementById('backToTopBtn');
